@@ -78,11 +78,30 @@ public class CustomerView extends VerticalLayout {
         Notification.show("Edit the details, then click Save Customer.");
     }
 
-    private void deleteCustomer(Customer customer) {
+    
+private void deleteCustomer(Customer customer) {
+    com.vaadin.flow.component.confirmdialog.ConfirmDialog dialog =
+            new com.vaadin.flow.component.confirmdialog.ConfirmDialog();
+
+    dialog.setHeader("Delete customer?");
+    dialog.setText("Are you sure you want to delete "
+            + customer.getName() + "?");
+
+    dialog.setCancelable(true);
+    dialog.setCancelText("Cancel");
+
+    dialog.setConfirmText("Delete");
+    dialog.setConfirmButtonTheme("error primary");
+
+    dialog.addConfirmListener(event -> {
         repository.delete(customer);
         refreshGrid();
         Notification.show("Customer deleted successfully!");
-    }
+    });
+
+    dialog.open();
+}
+
 
     private void refreshGrid() {
         grid.setItems(repository.findAll());
